@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:dataGrid var="car" value="#{dataGridView.cars}" columns="3" layout="grid"
+                        rows="8" paginator="true" id="cars"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PriviousPageLink} {PageLinks}  {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rowsPerPageTemplate="8,14,20" >
+                <f:facet name="header">
+                    List Cars
+                </f:facet>
+                
+                <p:panel header="#{car.id}" style="text-align: center">
+                    <p:panelGrid columns="1" style="widows: 100%;text-align: center">
+                        <h:outputText value="#{car.brand.toUpperCase()}" />
+                        <h:outputText value="#{car.year}" />
+                       
+                    </p:panelGrid>
+                </p:panel>
+                
+                <p:dialog header="Car Info" widgetVar="carDialog" showEffect="fade" hideEffect="fade">
+                    <p:outputPanel id="carDetail" style="text-align: center;">
+                        
+                    </p:outputPanel>
+                </p:dialog>
+            </p:dataGrid>
+        </h:form>
+        
+        
+        <p:spacer height="3" />
+        
+        <h:panelGrid columns="2" columnClasses="left,right" style="widows: 100%">
+            <p:chart type="line" model="#{chartView.animatedModel1}" style="width: 40%" />
+            <p:chart type="bar" model="#{chartView.animatedModel2}" style="width: 40%" />
+        </h:panelGrid>
+    </h:body>
+</html>
+
