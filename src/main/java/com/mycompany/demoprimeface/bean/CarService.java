@@ -74,6 +74,7 @@ public class CarService {
         return (int) (Math.random() * 100000);
     }
      private boolean getRandomSoldState() {
+         
         return (Math.random() > 0.5) ? true: false;
     }
 
