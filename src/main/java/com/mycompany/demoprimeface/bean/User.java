@@ -5,7 +5,11 @@
  */
 package com.mycompany.demoprimeface.bean;
 
+import com.mycompany.demoprimeface.dao.UserDao;
 import java.util.UUID;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -14,10 +18,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  * @author ADMIN
  */
+//@Document(collection = "Viet")
 
-@Document(collection = "Viet")
+@ManagedBean
 public class User {
-    @Id
+
+//    @Id
     private String uid;
 //    @Field("first_name")
     private String firstName;
@@ -45,7 +51,6 @@ public class User {
         this.lastName = lastName;
         this.email = email;
     }
-    
 
     public void setUid(String uid) {
         this.uid = uid;
@@ -80,9 +85,11 @@ public class User {
         return "User{" + "uid=" + uid + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + '}';
     }
 
-    
-    public String getRandomId(){
-        return UUID.randomUUID().toString().substring(0,8);
+    public String getRandomId() {
+        return UUID.randomUUID().toString().substring(0, 8);
     }
-    
+    public void add(){
+        UserDao.getInstance().add(this);
+    }
+
 }

@@ -10,41 +10,54 @@
         <title>User Crud Mongo</title>
     </h:head>
     <h:body>
-        <h:form>
+        <h:form id="form1">
             <p:panelGrid columns="4" style="margin: 20px 0px">
-                <p:inputText placeholder="Enter anything to search" value="#{userController.keySeach}" />
+                <p:inputText placeholder="Enter anything to search" value="#{userController.keySeach}" >
+                    <p:ajax event="keyup" update="total :form:tablee"/>
+                </p:inputText>
                 <p:commandButton value="Search" action="#{userController.search()}" update="total :form:tablee" />
                 <p:outputLabel id="total" value="Total record: #{userController.users.size()}" />
+
+                <p:commandButton value="Add" oncomplete="PF('addDialog').show()" />
             </p:panelGrid>
         </h:form>
         <h:form id="form">
+            <p:growl id="message" showDetail="true" />  
             <p:panelGrid layout="grid" columns="5" id="tablee" >
-                <p:dataTable var="user" value="#{userController.users}" >
-                    <p:column headerText="Uid" sortBy="#{user.uid}">
-                        <h:outputText value="#{user.uid}" />
+                <p:dataTable var="u" value="#{userController.users}" >
+                    <p:column headerText="Uid">
+                        <h:outputText value="#{u.uid}" />
                     </p:column>
-                    <p:column headerText="First Name" sortBy="#{user.firstName}">
-                        <h:outputText value="#{user.firstName}"/>
+                    <p:column headerText="First Name" >
+                        <h:outputText value="#{u.firstName}"/>
                     </p:column>
-                    <p:column headerText="Last Name" sortBy="#{user.lastName}">
-                        <h:outputText value="#{user.lastName}" />
+                    <p:column headerText="Last Name">
+                        <h:outputText value="#{u.lastName}" />
                     </p:column>
-                    <p:column headerText="Email" sortBy="#{user.email}">
-                        <h:outputText value="#{user.email}"/>
+                    <p:column headerText="Email">
+                        <h:outputText value="#{u.email}"/>
                     </p:column>
                     <p:column headerText="Actions">
-                        <p:commandButton update=":form:tablee" action="#{userController.delete()}" title="Delete" value="Delete">
+                        <p:commandButton update=":form1:total :form:tablee form:message" action="#{userController.delete()}" title="Delete" value="Delete">
+
+                            <f:setPropertyActionListener value="#{u}" target="#{userController.selectedUser}" />
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />  
                         </p:commandButton>
                         <p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" value="Edit">
-                            <h:outputText styleClass="ui-icon pi pi-search" style="margin:0 auto;" />
-                            <f:setPropertyActionListener value="#{user}" target="#{userController.selectedUser}" />
+                            <f:setPropertyActionListener value="#{u}" target="#{userController.selectedUser}" />
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
-
-
             </p:panelGrid>
 
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+
+            <!--Edit-->
             <p:dialog header="Edit #{userController.selectedUser.firstName}" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="text-align: center">
                 <p:outputPanel id="carDetail" style="text-align:center;">
                     <p:panelGrid  columns="2" rendered="#{not empty userController.selectedUser}" columnClasses="label,value">
@@ -59,17 +72,36 @@
                         <h:inputText value="#{userController.selectedUser.lastName}" />
 
                         <h:outputText value="Email" />
-                        <h:inputText value="#{userController.selectedUser.email}" />
+                        <h:inputText value="#{userController.selectedUser.email}" />                                                 
                     </p:panelGrid>
                     <p:commandButton update=":form:tablee" action="#{userController.edit()}" oncomplete="PF('carDialog').hide()" title="Update" value="Update" />
-                    <p:commandButton update=":form:tablee" action="#{userController.delete()}" oncomplete="PF('carDialog').hide()" title="Delete" value="Delete" />
+                    <p:commandButton update=":form:tablee :form1:total" action="#{userController.delete()}" oncomplete="PF('carDialog').hide()" title="Delete" value="Delete" />  
                 </p:outputPanel>
             </p:dialog>
         </h:form>
 
-        <ui:repeat value="#{userController.totalPage}" var="pageNumber">
-            <p:commandLink value="${pageNumber}" />
-        </ui:repeat>
+        <h:form>
+            <p:dialog header="Add New" widgetVar="addDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="text-align: center; width: 500px; height: 500px" >
+                <p:outputPanel id="addNew" style="text-align:center;">
+                    <p:panelGrid  columns="2"  columnClasses="label,value">
+
+                        <h:outputText value="FirstName" />
+                        <h:inputText id="firstname" value="#{user.firstName}" required="true" requiredMessage="Please enter first name!" />
+
+
+                        <h:outputText value="LastName" />
+                        <h:inputText value="#{user.lastName}" />
+
+                        <h:outputText value="Email" />
+                        <h:inputText value="#{user.email}" />
+                    </p:panelGrid>
+                    <p:commandButton update=":form:tablee :form1:total" action="#{user.add()}" oncomplete="PF('addDialog').hide()" title="Ok" value="Ok" >
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:dialog>
+
+        </h:form>
+
     </h:body>
 </html>
 

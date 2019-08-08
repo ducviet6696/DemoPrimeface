@@ -49,6 +49,7 @@ public class UserDao {
     //add user
     public void add(User user) {
         BasicDBObject document = new BasicDBObject();
+        document.put("uid", user.getRandomId());
         document.put("first_name", user.getFirstName());
         document.put("last_name", user.getLastName());
         document.put("email", user.getEmail());
@@ -70,11 +71,11 @@ public class UserDao {
 
     public List<User> getListBySearch(String keyword) {
         List<User> listUser = new ArrayList<>();
-        String regex = ".*"+ keyword +".*";
+        String regex = ".*" + keyword + ".*";
         Pattern pattern = Pattern.compile(regex);
-        System.out.println("pattern "+pattern);
+        System.out.println("pattern " + pattern);
         DBObject whereClause = new BasicDBObject("first_name", pattern);
-        System.out.println("whereClause: "+whereClause);
+        System.out.println("whereClause: " + whereClause);
         cursor = table.find(whereClause);
         while (cursor.hasNext()) {
             BasicDBObject document = (BasicDBObject) cursor.next();
